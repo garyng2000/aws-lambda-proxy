@@ -22,7 +22,7 @@ exports.lambdaHandler = async (event, context) => {
         let proxyMode;
         try {
             proxyToInfo = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
-            const { url, method, body, headers, mode } = proxyToInfo;
+            const { url, method, data, body, headers, mode } = proxyToInfo;
             if (url) {
                 try {
                     const res = await axios(
@@ -30,7 +30,7 @@ exports.lambdaHandler = async (event, context) => {
                             method: method || 'get',
                             url: url,
                             headers: headers || event.headers,
-                            data: method === "post" || method === "put" ? body : undefined,
+                            data: method === "post" || method === "put" ? data || body : undefined,
                         }
                     );
                     proxyRes = { body: res.data, headers: res.headers, status: res.status, statusText: res.statusText, mode: mode };
